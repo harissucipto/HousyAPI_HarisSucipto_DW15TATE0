@@ -1,0 +1,8 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "server housy app",
+  "main": "server.js",
+  "license": "MIT",
+  "private": false
+}
