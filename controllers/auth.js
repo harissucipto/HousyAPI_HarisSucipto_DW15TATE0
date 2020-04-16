@@ -4,30 +4,35 @@ const { User } = require("../models");
 
 exports.signin = async (req, res) => {
   try {
-    const { username, password, listAsId = 1 } = req.body;
+    const { username, password } = req.body;
 
-    // check if user uniq
     const user = await User.findOne({
       where: {
         username,
       },
     });
-    if (user) {
-      return res.status(400).send({
-        message: "Username already registered",
-        data: user,
+
+    // if username not match
+    if (!user) {
+      return res.status(401).send({
+        message: "Username not found",
       });
     }
 
-    // if ok create a new user
-    const passwordEncrypt = await bcrypt.hash(password, 10);
-    const newUser = await User.create({
-      ...req.body,
-      password: passwordEncrypt,
-      listAsId,
-    });
+    // if password not match
+    const isPasswordNotMatch = !(await bcrypt.compare(
+      password,
+      user.password
+    ));
+
+    if (isPasswordNotMatch)
+      return res.status(401).send({
+        message: "Incorect Password",
+      });
+
+    // if ok
     const token = jwt.sign(
-      { id: newUser.id },
+      { id: user.id },
       process.env.JWT_SECRET
     );
     const data = {
