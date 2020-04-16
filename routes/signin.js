@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { signin } = require("../controllers/auth");
 
 /*
 url = {your_host}/api/v1/signin
@@ -20,6 +21,6 @@ response body =
 }
 */
 
-router.post("/", (req, res) => res.send("ini path signin"));
+router.post("/", signin);
 
 module.exports = router;
