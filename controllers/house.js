@@ -75,3 +75,22 @@ exports.edit = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
+exports.remove = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const respon = await House.destroy({
+      where: { id },
+    });
+
+    if (!respon)
+      return res.status(401).send({ message: "data not valid" });
+
+    const data = { id };
+
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};

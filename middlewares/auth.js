@@ -3,16 +3,17 @@ const { User } = require("../models");
 
 exports.authenticated = async (req, res, next) => {
   try {
-    const token = req
-      .header("Authorization")
-      .replace("Bearer ", "");
+    const token = req.header("Authorization");
 
     if (!token)
       return res
         .status(401)
         .send({ message: "You're unauthorized!" });
 
-    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    const { id } = jwt.verify(
+      token.replace("Bearer ", ""),
+      process.env.JWT_SECRET
+    );
     if (!id)
       return res
         .status(403)
