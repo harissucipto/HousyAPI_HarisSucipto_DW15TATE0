@@ -9,7 +9,9 @@ module.exports = (sequelize, DataTypes) => {
   );
   ListAs.associate = function (models) {
     // associations can be defined here
-    ListAs.belongsTo(models.User);
+    ListAs.hasMany(models.User, {
+      foreignKey: "listAsId",
+    });
   };
   return ListAs;
 };

@@ -8,5 +8,6 @@ router.use("/houses", require("./houses"));
 router.use("/order", require("./order"));
 router.use("/orders", require("./orders"));
 router.use("/user", require("./user"));
+router.use("/users", require("./users"));
 
 module.exports = router;
