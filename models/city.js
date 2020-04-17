@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   City.associate = function (models) {
     // associations can be defined here
-    City.belongsTo(models.House);
+    City.hasMany(models.House);
   };
   return City;
 };

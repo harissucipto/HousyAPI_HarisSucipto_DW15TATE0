@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   Trx.associate = function (models) {
     // associations can be defined here
-    Trx.hasOne(models.House);
+    Trx.belongsTo(models.House);
   };
   return Trx;
 };

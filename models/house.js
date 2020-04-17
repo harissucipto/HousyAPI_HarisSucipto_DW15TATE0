@@ -8,7 +8,19 @@ module.exports = (sequelize, DataTypes) => {
       address: DataTypes.STRING,
       price: DataTypes.INTEGER,
       typeRent: DataTypes.STRING,
-      ameneties: DataTypes.STRING,
+      ameneties: {
+        type: DataTypes.STRING,
+        set(value) {
+          const data = Array.isArray(value)
+            ? value.join(";")
+            : null;
+          this.setDataValue("ameneties", data);
+        },
+        get() {
+          const data = this.getDataValue("ameneties");
+          return String(data).split(";");
+        },
+      },
       bedRoom: DataTypes.INTEGER,
       bathroom: DataTypes.INTEGER,
       ownerId: DataTypes.INTEGER,
@@ -17,8 +29,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   House.associate = function (models) {
     // associations can be defined here
-    House.hasOne(models.City);
-    House.belongsTo(models.Trx);
+    House.belongsTo(models.City);
   };
   return House;
 };
