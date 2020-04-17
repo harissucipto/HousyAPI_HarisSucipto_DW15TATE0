@@ -13,7 +13,13 @@ exports.detail = async (req, res) => {
         },
       ],
       attributes: {
-        exclude: ["cityId", "CityId", "createdAt", "updatedAt"],
+        exclude: [
+          "cityId",
+          "CityId",
+          "createdAt",
+          "updatedAt",
+          "ownerId",
+        ],
       },
     });
 
@@ -21,13 +27,8 @@ exports.detail = async (req, res) => {
     if (!house)
       return res.status(401).send({ message: "House Not Found" });
 
-    const data = {
-      ...house.get(),
-    };
-    delete data.ownerId;
-
     res.status(200).send({
-      data,
+      data: house,
     });
   } catch (error) {
     res.status(500).send(error);
