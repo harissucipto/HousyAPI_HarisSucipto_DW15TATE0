@@ -1,8 +1,15 @@
 const { House, City } = require("../models");
+const { Op } = require("sequelize");
 
-exports.get = async (_req, res) => {
+exports.get = async (req, res) => {
   try {
+    const { typeRent, belowPrice } = req.query;
+
     const houses = await House.findAll({
+      where: {
+        ...filterByTypeRent(typeRent),
+        ...filterByBelowPrice(belowPrice),
+      },
       include: [
         {
           model: City,
@@ -24,4 +31,19 @@ exports.get = async (_req, res) => {
   } catch (error) {
     res.status(500).send(error);
   }
+};
+
+const filterByTypeRent = (typeRent) => {
+  if (!typeRent) return {};
+
+  return { typeRent };
+};
+
+const filterByBelowPrice = (belowPrice) => {
+  if (!belowPrice) return {};
+  return {
+    price: {
+      [Op.lt]: belowPrice,
+    },
+  };
 };
