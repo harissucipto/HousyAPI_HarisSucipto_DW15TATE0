@@ -30,6 +30,9 @@ module.exports = (sequelize, DataTypes) => {
   House.associate = function (models) {
     // associations can be defined here
     House.belongsTo(models.City);
+    House.belongsTo(models.User, {
+      foreignKey: "ownerId",
+    });
     House.hasMany(models.Trx);
   };
   return House;

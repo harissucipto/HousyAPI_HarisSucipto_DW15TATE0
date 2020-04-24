@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
+const { User, ListAs } = require("../models");
 
 exports.signin = async (req, res) => {
   try {
@@ -10,6 +10,12 @@ exports.signin = async (req, res) => {
       where: {
         username,
       },
+      include: [
+        {
+          model: ListAs,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+      ],
     });
 
     // if username not match
@@ -38,6 +44,7 @@ exports.signin = async (req, res) => {
     const data = {
       username,
       token,
+      role: user.ListA.name,
     };
     res.status(200).send({ data });
   } catch (error) {
@@ -54,6 +61,12 @@ exports.signup = async (req, res) => {
       where: {
         username,
       },
+      include: [
+        {
+          model: ListAs,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+      ],
     });
     if (user) {
       return res.status(400).send({

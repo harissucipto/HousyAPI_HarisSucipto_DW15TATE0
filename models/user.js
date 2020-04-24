@@ -19,6 +19,12 @@ module.exports = (sequelize, DataTypes) => {
     User.belongsTo(models.ListAs, {
       foreignKey: "listAsId",
     });
+    User.hasMany(models.House, {
+      foreignKey: "ownerId",
+    });
+    User.hasOne(models.Trx, {
+      foreignKey: "tenantId",
+    });
   };
   return User;
 };

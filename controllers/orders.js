@@ -1,21 +1,70 @@
-const { Trx, House, City } = require("../models");
+const { Op } = require("sequelize");
+const { Trx, House, City, User } = require("../models");
+const { filterByListId } = require("../utils");
 
 exports.get = async (req, res) => {
   try {
+    const { user: tenantId, listAsId } = req;
+
+    const { category } = req.query;
+    // filter order category booking
+    // status order ["waitingPayment", "pending"];
+    // filter order category history
+    // status order ["approve", "pending", "cancel"]
+    const statusSearch =
+      category === "booking"
+        ? ["waiting payment", "pending"]
+        : ["approve", "pending", "cancel"];
+
+    const whereStatus = category
+      ? {
+          status: {
+            [Op.in]: statusSearch,
+          },
+        }
+      : {};
+
+    console.log(whereStatus, "hehe");
+
+    const isHakAkses = await filterByListId(listAsId, tenantId);
+
     const orders = await Trx.findAll({
+      where: {
+        ...isHakAkses("tenant"),
+        ...whereStatus,
+      },
       include: [
         {
+          model: User,
+          attributes: [
+            "id",
+            "username",
+            "phone",
+            "fullName",
+            "gender",
+          ],
+        },
+        {
           model: House,
+          where: {
+            ...isHakAkses("owner"),
+          },
           include: [
             {
               model: City,
-              attributes: { exclude: ["createdAt", "updatedAt"] },
+              attributes: {
+                exclude: ["createdAt", "updatedAt"],
+              },
+            },
+            {
+              model: User,
+              attributes: ["id", "username"],
             },
           ],
           attributes: {
             exclude: [
               "cityId",
-              "ownerId",
+              // "ownerId",
               "createdAt",
               "updatedAt",
               "CityId",
@@ -28,7 +77,7 @@ exports.get = async (req, res) => {
           "createdAt",
           "updatedAt",
           "houseId",
-          "tenantId",
+          // "tenantId",
           "HouseId",
         ],
       },

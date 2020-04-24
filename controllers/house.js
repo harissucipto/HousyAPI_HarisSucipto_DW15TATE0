@@ -1,4 +1,4 @@
-const { House, City } = require("../models");
+const { House, City, User } = require("../models");
 
 exports.detail = async (req, res) => {
   try {
@@ -11,15 +11,13 @@ exports.detail = async (req, res) => {
           model: City,
           attributes: { exclude: ["createdAt", "updatedAt"] },
         },
+        {
+          model: User,
+          attributes: ["id", "username"],
+        },
       ],
       attributes: {
-        exclude: [
-          "cityId",
-          "CityId",
-          "createdAt",
-          "updatedAt",
-          "ownerId",
-        ],
+        exclude: ["cityId", "CityId", "createdAt", "updatedAt"],
       },
     });
 
@@ -29,6 +27,7 @@ exports.detail = async (req, res) => {
 
     res.status(200).send({
       data: house,
+      message: "Berhasil",
     });
   } catch (error) {
     res.status(500).send(error);
@@ -39,7 +38,7 @@ exports.add = async (req, res) => {
   try {
     const newData = {
       ...req.body,
-      ownerId: req.user || 2,
+      ownerId: req.user,
     };
     const house = await House.create(newData);
 
@@ -58,13 +57,14 @@ exports.add = async (req, res) => {
 exports.edit = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user;
 
     const house = await House.update(
       {
         ...req.body,
       },
       {
-        where: { id },
+        where: { id, ownerId: userId },
       }
     );
 
@@ -80,9 +80,10 @@ exports.edit = async (req, res) => {
 exports.remove = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user;
 
     const respon = await House.destroy({
-      where: { id },
+      where: { id, ownerId: userId },
     });
 
     if (!respon)
@@ -90,7 +91,7 @@ exports.remove = async (req, res) => {
 
     const data = { id };
 
-    res.status(200).send(data);
+    res.status(200).send({ data, message: "Berhasil" });
   } catch (error) {
     res.status(500).send(error);
   }

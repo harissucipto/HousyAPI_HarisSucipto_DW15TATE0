@@ -9,5 +9,6 @@ router.use("/order", require("./order"));
 router.use("/orders", require("./orders"));
 router.use("/user", require("./user"));
 router.use("/users", require("./users"));
+router.use("/profile", require("./profile"));
 
 module.exports = router;

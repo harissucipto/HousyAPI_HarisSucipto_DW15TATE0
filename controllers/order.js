@@ -1,44 +1,61 @@
-const { Trx, House, City } = require("../models");
+const { Trx, House, City, User } = require("../models");
+const { filterByListId } = require("../utils");
 
-exports.get = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const order = await Trx.findOne({
-      where: { id },
+const whereMyHouse = (isHakAkses, id) => ({
+  where: { id, ...isHakAkses("tenant") },
+  include: [
+    {
+      model: User,
+      attributes: ["id", "username"],
+    },
+    {
+      model: House,
+      where: {
+        ...isHakAkses("owner"),
+      },
       include: [
         {
-          model: House,
-          include: [
-            {
-              model: City,
-              attributes: { exclude: ["createdAt", "updatedAt"] },
-            },
-          ],
-          attributes: {
-            exclude: [
-              "cityId",
-              "ownerId",
-              "createdAt",
-              "updatedAt",
-              "CityId",
-            ],
-          },
+          model: City,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+        {
+          model: User,
+          attributes: ["id", "username"],
         },
       ],
       attributes: {
         exclude: [
+          "cityId",
+          // "ownerId",
           "createdAt",
           "updatedAt",
-          "houseId",
-          "tenantId",
-          "HouseId",
+          "CityId",
         ],
       },
-    });
+    },
+  ],
+  attributes: {
+    exclude: [
+      "createdAt",
+      "updatedAt",
+      "houseId",
+      // "tenantId",
+      "HouseId",
+    ],
+  },
+});
+
+exports.get = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { user: tenantId, listAsId } = req;
+
+    const isHakAkses = await filterByListId(listAsId, tenantId);
+
+    const order = await Trx.findOne(whereMyHouse(isHakAkses, id));
 
     if (!order)
-      return res.status(401).send({ message: "Orders Not Found" });
+      return res.status(401).send({ message: "Order Not Found" });
 
     res.status(200).send({
       data: order,
@@ -51,8 +68,15 @@ exports.get = async (req, res) => {
 exports.edit = async (req, res) => {
   try {
     const { id } = req.params;
+    const { user: tenantId, listAsId } = req;
 
-    const order = await Trx.update(
+    const isHakAkses = await filterByListId(listAsId, tenantId);
+
+    const order = await Trx.findOne(whereMyHouse(isHakAkses, id));
+    if (!order)
+      return res.status(401).send({ message: "bukan punya kamu" });
+
+    const updatedOrder = await Trx.update(
       {
         ...req.body,
       },
@@ -61,8 +85,8 @@ exports.edit = async (req, res) => {
       }
     );
 
-    if (!order)
-      return res.status(401).send({ message: "data not valid" });
+    if (!updatedOrder)
+      return res.status(500).send({ message: "data not valid" });
 
     this.get(req, res);
   } catch (error) {

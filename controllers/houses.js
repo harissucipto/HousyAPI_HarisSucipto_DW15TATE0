@@ -1,4 +1,4 @@
-const { House, City } = require("../models");
+const { House, City, User } = require("../models");
 const { Op } = require("sequelize");
 
 exports.get = async (req, res) => {
@@ -15,6 +15,10 @@ exports.get = async (req, res) => {
           model: City,
           attributes: { exclude: ["createdAt", "updatedAt"] },
         },
+        {
+          model: User,
+          attributes: ["id", "username"],
+        },
       ],
       attributes: {
         exclude: ["cityId", "CityId", "createdAt", "updatedAt"],
@@ -27,9 +31,10 @@ exports.get = async (req, res) => {
 
     res.status(200).send({
       data: houses,
+      message: "Berhasil",
     });
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send({ error });
   }
 };
 
