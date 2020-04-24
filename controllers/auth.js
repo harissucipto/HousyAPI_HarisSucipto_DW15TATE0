@@ -80,15 +80,19 @@ exports.signup = async (req, res) => {
       ...req.body,
       password: passwordEncrypt,
     });
-    const token = jwt.sign(
-      { id: newUser.id },
-      process.env.JWT_SECRET
-    );
-    const data = {
-      username,
-      token,
-    };
-    res.status(200).send({ data });
+    // const token = jwt.sign(
+    //   { id: newUser.id },
+    //   process.env.JWT_SECRET
+    // );
+
+    // const data = {
+    //   username,
+    //   token,
+    //   role: user.ListA.name,
+    // };
+    if (!newUser) throw new Error();
+
+    this.signin(req, res);
   } catch (error) {
     res.status(500).send(error);
   }
