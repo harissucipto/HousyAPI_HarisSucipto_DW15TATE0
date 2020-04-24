@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         get() {
           const data = this.getDataValue("ameneties");
+          if (!data) return null;
           return String(data).split(";");
         },
       },
