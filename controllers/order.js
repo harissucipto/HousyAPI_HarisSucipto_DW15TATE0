@@ -6,7 +6,13 @@ const whereMyHouse = (isHakAkses, id) => ({
   include: [
     {
       model: User,
-      attributes: ["id", "username"],
+      attributes: [
+        "id",
+        "username",
+        "phone",
+        "fullName",
+        "gender",
+      ],
     },
     {
       model: House,

@@ -14,7 +14,7 @@ exports.get = async (req, res) => {
     const statusSearch =
       category === "booking"
         ? ["waiting payment", "pending"]
-        : ["approve", "pending", "cancel"];
+        : ["approve", "cancel"];
 
     const whereStatus = category
       ? {
