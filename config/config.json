@@ -23,9 +23,7 @@
     "dialect": "mysql",
     "operatorsAliases": false,
     "dialectOptions": {
-      "options": {
-        "requestTimeout": 4000
-      }
+      "requestTimeout": 4000
     }
   }
 }
