@@ -3,23 +3,17 @@
 module.exports = {
   up: (queryInterface) => {
     return queryInterface.bulkInsert(
-      "Cities",
+      "listAs",
       [
         {
+          name: "owner",
           id: 1,
-          name: "Jakarta",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
+          name: "tenant",
           id: 2,
-          name: "Pekanbaru",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          id: 3,
-          name: "Tanjung Balai Karimun",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -29,6 +23,6 @@ module.exports = {
   },
 
   down: (queryInterface) => {
-    return queryInterface.bulkDelete("Cities", null, {});
+    return queryInterface.bulkDelete("listAs", null, {});
   },
 };

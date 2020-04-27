@@ -3,7 +3,7 @@
 module.exports = {
   up: (queryInterface) => {
     return queryInterface.bulkInsert(
-      "listAs",
+      "ListAs",
       [
         {
           name: "owner",
@@ -23,6 +23,6 @@ module.exports = {
   },
 
   down: (queryInterface) => {
-    return queryInterface.bulkDelete("listAs", null, {});
+    return queryInterface.bulkDelete("ListAs", null, {});
   },
 };

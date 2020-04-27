@@ -3,7 +3,7 @@
 module.exports = {
   up: (queryInterface) => {
     return queryInterface.bulkInsert(
-      "Houses",
+      "houses",
       [
         {
           id: 1,
@@ -81,6 +81,6 @@ module.exports = {
   },
 
   down: (queryInterface) => {
-    return queryInterface.bulkDelete("Houses", null, {});
+    return queryInterface.bulkDelete("houses", null, {});
   },
 };
