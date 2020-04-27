@@ -11,5 +11,5 @@ app.use(express.json());
 app.use("/api/v1", router);
 
 app.listen(port, () =>
-  console.log(`Server b is running in port a ${port}`)
+  console.log(`Server c is running in port a ${port}`)
 );
