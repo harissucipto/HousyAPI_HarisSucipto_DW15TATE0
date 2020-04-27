@@ -16,11 +16,11 @@
     "operatorsAliases": false
   },
   "production": {
-    "use_env_variable": "DATABASE_URL",
-    "dialect": "postgres",
-    "protocol": "postgres",
-    "dialectOptions": {
-      "ssl": true
-    }
+    "username": "harishousy",
+    "password": "haris123",
+    "database": "harishousy",
+    "host": "db4free.net",
+    "dialect": "mysql",
+    "operatorsAliases": false
   }
 }
